@@ -1,8 +1,9 @@
 from flask import Flask, request, jsonify
 import sqlite3
-
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 def fibonacci(n):
     if n <= 0:
@@ -26,7 +27,9 @@ def compute():
 
 @app.route('/fibonacci', methods=['POST'])
 def compute_fibonacci():
-    n = int(request.form['n'])
+    data = request.get_json()
+    n = int(data['num'])
+    print(n)
     fib_numbers = fibonacci(n)
     return jsonify({'fib_numbers': fib_numbers})
 

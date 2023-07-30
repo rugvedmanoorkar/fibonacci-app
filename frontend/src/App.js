@@ -1,12 +1,19 @@
-import './App.css';
-import Fibonacci from './Fibonacci';
-import Home from './Home';
+import "./App.css";
+import Fibonacci from "./Fibonacci";
+import Home from "./Home";
+
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
     <div className="App">
-      <Home />
-      <Fibonacci />
+      <Router>
+        <Routes>
+          <Route exact path="/home" element={<Home />} />
+          <Route path="/fibonacci/:n" element={<Fibonacci />} />
+        </Routes>
+      </Router>
+      ,
     </div>
   );
 }

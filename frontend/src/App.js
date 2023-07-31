@@ -10,7 +10,7 @@ function App() {
       <Router>
         <Routes>
           <Route exact path="/home" element={<Home />} />
-          <Route path="/fibonacci/:n" element={<Fibonacci />} />
+          <Route path="/fibonacci" element={<Fibonacci />} />
         </Routes>
       </Router>
       ,

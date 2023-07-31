@@ -4,6 +4,7 @@ import axios from "axios";
 
 const Home = () => {
   const [num, setNum] = useState("");
+  const [fibNumbers, setFibNumbers] = useState([]); 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -14,14 +15,21 @@ const Home = () => {
     e.preventDefault();
     try {
       const response = await axios.post("http://127.0.0.1:8000/fibonacci", {
-        num
+        num: parseInt(num), // Parse the input string to an integer
       });
-      const fibNumbers = response.data.fib_numbers.join(", ");
-      navigate(`/fibonacci/${num}`, {
-        state: { num: num, fibNumbers: fibNumbers }
-      });
+
+      const fibNumbersResponse = response.data.fib_numbers;
+      if ((fibNumbersResponse)) {
+        setFibNumbers(fibNumbersResponse);
+        navigate(`/fibonacci`, {
+          state: { num: parseInt(num), fibNumbers: fibNumbersResponse },
+        });
+      } else {
+        console.error("Invalid response:", response.data);
+      }
     } catch (error) {
       console.error("Error", error);
+      // Add error handling here, e.g., show an error message to the user
     }
   };
   return (
@@ -30,7 +38,7 @@ const Home = () => {
       <form onSubmit={handleSubmit}>
         <label>
           Enter value of n:
-          <input type="number" onChange={handleChange} required />
+          <input type="number" onChange={handleChange} required min="1" />
         </label>
         <button type="submit"> Generate </button>
       </form>

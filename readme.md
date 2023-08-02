@@ -26,5 +26,5 @@ This is a simple web application built with React on the frontend and Flask on t
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/fibonacci-app.git
+git clone https://github.com/rugvedmanoorkar/fibonacci-app.git
 cd fibonacci-app

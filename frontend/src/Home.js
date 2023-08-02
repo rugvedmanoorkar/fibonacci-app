@@ -17,12 +17,13 @@ const Home = () => {
     e.preventDefault();
     try {
       const response = await axios.post("http://127.0.0.1:8000/fibonacci", {
-        num: parseInt(num) // Parse the input string to an integer
+        num: parseInt(num) 
       });
 
       const fibNumbersResponse = response.data.fib_numbers;
       if (fibNumbersResponse) {
         setFibNumbers(fibNumbersResponse);
+        console.log(fibNumbersResponse)
         navigate(`/fibonacci`, {
           state: { num: parseInt(num), fibNumbers: fibNumbersResponse }
         });
@@ -36,8 +37,8 @@ const Home = () => {
   };
   return (
     <div>
-      <div className="wrapper">
-        <div className="container" id="form">
+      <div className="home-wrapper">
+        <div className="home-container" id="form">
           <h1>Generate Fibonacci numbers </h1>
 
           <form onSubmit={handleSubmit}>

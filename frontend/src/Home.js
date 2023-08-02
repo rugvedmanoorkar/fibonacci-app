@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+import './styles/Home.css'
+
 const Home = () => {
   const [num, setNum] = useState("");
-  const [fibNumbers, setFibNumbers] = useState([]); 
+  const [fibNumbers, setFibNumbers] = useState([]);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -15,14 +17,14 @@ const Home = () => {
     e.preventDefault();
     try {
       const response = await axios.post("http://127.0.0.1:8000/fibonacci", {
-        num: parseInt(num), // Parse the input string to an integer
+        num: parseInt(num) // Parse the input string to an integer
       });
 
       const fibNumbersResponse = response.data.fib_numbers;
-      if ((fibNumbersResponse)) {
+      if (fibNumbersResponse) {
         setFibNumbers(fibNumbersResponse);
         navigate(`/fibonacci`, {
-          state: { num: parseInt(num), fibNumbers: fibNumbersResponse },
+          state: { num: parseInt(num), fibNumbers: fibNumbersResponse }
         });
       } else {
         console.error("Invalid response:", response.data);
@@ -34,14 +36,20 @@ const Home = () => {
   };
   return (
     <div>
-      <h1>Generate Fibonacci numbers </h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Enter value of n:
-          <input type="number" onChange={handleChange} required min="1" />
-        </label>
-        <button type="submit"> Generate </button>
-      </form>
+      <div className="wrapper">
+        <div className="container" id="form">
+          <h1>Generate Fibonacci numbers </h1>
+
+          <form onSubmit={handleSubmit}>
+            <label>
+              Enter value of n:
+              
+            </label>
+            <input type="number" onChange={handleChange} required min="1" />
+            <button type="submit"> Generate </button>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };

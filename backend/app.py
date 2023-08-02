@@ -5,6 +5,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
+# Function to calculate the Fibonacci numbers up to n
 def fibonacci(n):
     if n <= 0:
         return []
@@ -18,6 +19,8 @@ def fibonacci(n):
         fib_numbers.append(fib_numbers[-1] + fib_numbers[-2])
 
     return fib_numbers
+
+# Function to create the 'fibonacci' table in the SQLite database
 def create_fibonacci_table():
     conn = sqlite3.connect('fibonacci.db')
     cursor = conn.cursor()
@@ -31,6 +34,7 @@ def create_fibonacci_table():
     conn.commit()
     conn.close()
 
+# Function to save the Fibonacci numbers to the 'fibonacci' table in the database
 def save_to_database(n, fib_numbers):
     conn = sqlite3.connect('fibonacci.db')
     cursor = conn.cursor()
@@ -38,8 +42,8 @@ def save_to_database(n, fib_numbers):
     conn.commit()
     conn.close()
 
+# Function to retrieve the Fibonacci numbers from the 'fibonacci' table based on n
 def get_from_database(n):
-    
     conn = sqlite3.connect('fibonacci.db')
     cursor = conn.cursor()
     cursor.execute('SELECT numbers FROM fibonacci WHERE n = ?', (n,))
@@ -47,26 +51,26 @@ def get_from_database(n):
     conn.close()
     return result[0] if result else None
 
-
+# Route to handle GET requests on the root endpoint
 @app.route('/', methods=['GET'])
 def compute():
     return jsonify({'fib_numbers': "fib_numbers"})
 
-
+# Route to handle POST requests on the '/fibonacci' endpoint
 @app.route('/fibonacci', methods=['POST'])
 def compute_fibonacci():
     data = request.get_json()
     n = int(data['num'])
-    print(n)
+    # Check if the Fibonacci numbers for n exist in the database
     fib_numbers = get_from_database(n)
+    # If not found in the database, calculate Fibonacci numbers and save them to the database
     if fib_numbers is None:
         fib_numbers = fibonacci(n)
         save_to_database(n, fib_numbers)
     return jsonify({'fib_numbers': fib_numbers})
 
-    
-
 if __name__ == '__main__':
-
-    app.run(port=8000,debug=True)
+    # Start the Flask app on port 8000 in debug mode
+    app.run(port=8000, debug=True)
+    # Create the 'fibonacci' table in the database (this will be executed once at startup)
     create_fibonacci_table()

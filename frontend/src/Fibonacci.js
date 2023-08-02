@@ -8,13 +8,15 @@ const Fibonacci = () => {
   const [fibNumbers, setFibNumbers] = useState([]);
 
   useEffect(() => {
+    // Check if 'fibNumbers' exists in the location state
     if (location.state && location.state.fibNumbers) {
       const fibNumbersValue = location.state.fibNumbers;
-
+      // Get the value of 'fibNumbers' from the location state
       if (Array.isArray(fibNumbersValue)) {
         console.log(fibNumbersValue, typeof fibNumbersValue);
+        // If 'fibNumbersValue' is an array, join the elements with a comma and set it in the state
         setFibNumbers(fibNumbersValue.join(", "));
-      } else if (typeof fibNumbersValue === "string") {
+      } else if (typeof fibNumbersValue === "string") { // If 'fibNumbersValue' is a string, split it by comma, trim each element, and join with a comma
         console.log(fibNumbersValue, typeof fibNumbersValue);
         const splitArray = fibNumbersValue
           .split(",")

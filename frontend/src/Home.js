@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import './styles/Home.css'
 
@@ -16,7 +18,7 @@ const Home = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://127.0.0.1:8000/fibonacci", {
+      const response = await axios.post(`${process.env.REACT_APP_SERVER_ADDRESS}/fibonacci`, {
         num: parseInt(num) 
       });
 
@@ -29,10 +31,11 @@ const Home = () => {
         });
       } else {
         console.error("Invalid response:", response.data);
+        toast.error("Invalid response");
       }
     } catch (error) {
       console.error("Error", error);
-      // Add error handling here, e.g., show an error message to the user
+      toast.error("Error occurred");
     }
   };
   return (
@@ -51,6 +54,7 @@ const Home = () => {
           </form>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

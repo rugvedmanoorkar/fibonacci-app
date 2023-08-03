@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, abort
 import sqlite3
 from flask_cors import CORS
 
@@ -54,23 +54,42 @@ def get_from_database(n):
 # Route to handle GET requests on the root endpoint
 @app.route('/', methods=['GET'])
 def compute():
-    return jsonify({'fib_numbers': "fib_numbers"})
+    return jsonify({'message': 'Welcome to the Fibonacci API!'})
 
 # Route to handle POST requests on the '/fibonacci' endpoint
 @app.route('/fibonacci', methods=['POST'])
 def compute_fibonacci():
     data = request.get_json()
-    n = int(data['num'])
+    if 'num' not in data:
+        abort(400, description="Missing 'num' field in JSON data.")
+    try:
+        n = int(data['num'])
+        if n <= 0:
+            abort(400, description="'num' should be a positive integer.")
+    except ValueError:
+        abort(400, description="'num' should be a valid integer.")
+    
     # Check if the Fibonacci numbers for n exist in the database
     fib_numbers = get_from_database(n)
+    
     # If not found in the database, calculate Fibonacci numbers and save them to the database
     if fib_numbers is None:
         fib_numbers = fibonacci(n)
         save_to_database(n, fib_numbers)
     return jsonify({'fib_numbers': fib_numbers})
 
+# Error handling for 404 Not Found
+@app.errorhandler(404)
+def not_found_error(error):
+    return jsonify({'error': 'Not Found', 'message': 'The requested URL was not found on this server.'}), 404
+
+# Error handling for 400 Bad Request
+@app.errorhandler(400)
+def bad_request_error(error):
+    return jsonify({'error': 'Bad Request', 'message': error.description}), 400
+
 if __name__ == '__main__':
-    # Start the Flask app on port 8000 in debug mode
-    app.run(port=8000, debug=True)
     # Create the 'fibonacci' table in the database (this will be executed once at startup)
     create_fibonacci_table()
+    # Start the Flask app on port 8000 in debug mode
+    app.run(port=8000, debug=True)
